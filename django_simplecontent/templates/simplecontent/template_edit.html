@@ -1,0 +1,24 @@
+{% extends "simplecontent/base.html" %}
+{% block subTitle %}Edit template: {{ name }}{% endblock subTitle %}
+{% block extra_head %}
+{% if saved %}
+<script>
+jQuery(document).ready(function(){
+	$("#saved").delay(5000).fadeOut('fast', function(){
+		$(this).show().html("&nbsp;");
+	});
+});
+</script>
+{% endif %}
+{% endblock %}
+{% block simplecontent %}
+<form action="{% url django_simplecontent.views.template_edit path name %}" method="post">
+	{% if saved %}
+	<div id="saved" style="color: #008800">Save sucessful!</div>
+	{% endif %}
+
+	{% csrf_token %}
+	{{ form.as_p }}
+	<input type="submit" value="Save template" />
+</form>
+{% endblock %}

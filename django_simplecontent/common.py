@@ -26,6 +26,19 @@ def importClass(path):
 
 	return cls
 
+def getTemplateManager():
+	templateManager = getattr(settings, 'SIMPLECONTENT_TEMPLATEMANAGER', 'django_simplecontent.template.DjangoTemplateManager')
+	templateManager = importClass(templateManager)()
+	return templateManager
+
+def getPageProcessors(includeStatic):
+	pageProcessors = getattr(settings, 'SIMPLECONTENT_LIVE_PROCESSORS', ())
+	if includeStatic:
+		pageProcessors += getattr(settings, 'SIMPLECONTENT_STATIC_PROCESSORS', ())
+	pageProcessors = [makeProcessor(entry) for entry in pageProcessors]
+
+	return pageProcessors
+
 def makeProcessor(entry):
 	kwds = {}
 	if isinstance(entry, tuple):
@@ -42,9 +55,9 @@ def makeProcessor(entry):
 	return importClass(path)(*args, **kwds)
 
 def renderTemplate(fileInfo, templateManager, allowAbort = False, pageProcessors = []):
+	render = True
 	for proccessor in pageProcessors:
-		if proccessor.processFile(fileInfo) == False and allowAbort:
-			return
+		render &= proccessor.processFile(fileInfo) == True
 
 	variables = {"fileInfo": fileInfo}
 	for proccessor in pageProcessors:
@@ -53,4 +66,6 @@ def renderTemplate(fileInfo, templateManager, allowAbort = False, pageProcessors
 	template = templateManager.getFromFile(fileInfo["srcPath"])
 	for proccessor in pageProcessors:
 		proccessor.processTemplate(fileInfo, variables, template)
-	return template.render(variables)
+
+	if render or not allowAbort:
+		return template.render(variables)

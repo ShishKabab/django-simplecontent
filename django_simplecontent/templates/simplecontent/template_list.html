@@ -1,0 +1,10 @@
+{% extends "simplecontent/base.html" %}
+{% block subTitle %}Template list{% endblock subTitle %}
+{% block simplecontent %}
+<h1>Template list</h1>
+<ul>
+	{% for template in templates %}
+	<li><a href="{% url django_simplecontent.views.template_edit template.path template.name %}">{{ template.name }}</a></li>
+	{% endfor %}
+</ul>
+{% endblock %}

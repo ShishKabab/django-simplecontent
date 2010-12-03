@@ -1,0 +1,10 @@
+{% extends "simplecontent/base.html" %}
+{% block subTitle %}Content list{% endblock subTitle %}
+{% block simplecontent %}
+<h1>Content list</h1>
+<ul>
+	{% for file in files %}
+	<li><a href="{% url django_simplecontent.views.content_edit %}?path={{ file.path|urlencode }}">{{ file.name }}</a></li>
+	{% endfor %}
+</ul>
+{% endblock %}

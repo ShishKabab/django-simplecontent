@@ -27,6 +27,14 @@ class LastModifiedProcessor(PageProcessor):
 		variables['lastModified'] = fileInfo["srcModified"]
 		return variables
 
+class CustomVariablesProcessor(PageProcessor):
+	def __init__(self, **variables):
+		self.variables = variables
+
+	def processVariables(self, fileInfo, variables):
+		variables.update(self.variables)
+		return variables
+
 class GoogleSitemapProcessor(PageProcessor):
 	def __init__(self, outFile):
 		self.outDir = None
@@ -81,3 +89,7 @@ class HtmlSitemapProcessor(PageProcessor):
 			'lastModified': datetime.now()
 		})
 		open(os.path.join(self.outDir, self.outFile), 'w').write(content.encode('utf8'))
+
+class OnlyModifiedProcessor(PageProcessor):
+	def processFile(self, fileInfo):
+		return fileInfo["srcModified"] > fileInfo["outModified"]

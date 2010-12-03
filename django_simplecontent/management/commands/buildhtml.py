@@ -3,18 +3,15 @@ from os.path import join as joinPath
 from django.core.management.base import BaseCommand, CommandError
 from django.template import Context, Template
 from django.conf import settings
-from django_simplecontent.common import renderTemplate, importClass, makeProcessor
+from django_simplecontent.common import getTemplateManager, getPageProcessors
 
 class Command(BaseCommand):
 	args = '<output_directory>'
 	help = 'Renders content in content root and stores it in <output_directory>'
 	joinPath = os.path.join
 
-	templateManager = getattr(settings, 'SIMPLECONTENT_TEMPLATEMANAGER', 'django_simplecontent.template.DjangoTemplateManager')
-	templateManager = importClass(templateManager)()
-	pageProcessors = getattr(settings, 'SIMPLECONTENT_LIVE_PROCESSORS', ())
-	pageProcessors += getattr(settings, 'SIMPLECONTENT_STATIC_PROCESSORS', ())
-	pageProcessors = [makeProcessor(entry) for entry in pageProcessors]
+	templateManager = getTemplateManager()
+	pageProcessors = getPageProcessors(includeStatic = True)
 
 	def handle(self, *args, **options):
 		if not args[0].endswith("/"):

@@ -12,6 +12,14 @@ ADMINS = ()
 MANAGERS = ADMINS
 
 DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
+        'NAME': 'examples.sq3',                      # Or path to database file if using sqlite3.
+        'USER': '',                      # Not used with sqlite3.
+        'PASSWORD': '',                  # Not used with sqlite3.
+        'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
+        'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
+    },
 }
 
 # Local time zone for this installation. Choices can be found here:
@@ -25,7 +33,7 @@ TIME_ZONE = 'Europe/Amsterdam'
 
 # Language code for this installation. All choices can be found here:
 # http://www.i18nguy.com/unicode/language-identifiers.html
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'nl-nl'
 
 SITE_ID = 1
 SITE_ROOT = "http://localhost:8000/"
@@ -72,7 +80,10 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 
 MIDDLEWARE_CLASSES = (
     'django.middleware.common.CommonMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
+    'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.contrib.messages.middleware.MessageMiddleware',
     'django_simplecontent.middleware.ContentMiddleware'
 )
 #if DEBUG:
@@ -99,7 +110,8 @@ INSTALLED_APPS = (
 if DEBUG:
     INSTALLED_APPS += (
         'django_simplecontent',
-        #'debug_toolbar',
+        'tinymce',
+        'debug_toolbar',
     )
 
 INTERNAL_IPS = ('127.0.0.1',)
@@ -117,3 +129,8 @@ SIMPLECONTENT_STATIC_PROCESSORS = (
 	('django_simplecontent.processors.GoogleSitemapProcessor', 'sitemap.xml'),
 	processor('django_simplecontent.processors.HtmlSitemapProcessor', outFile = 'sitemap.html', template = 'sitemap.html'),
 )
+#
+# TinyMCE
+#
+TINYMCE_JS_URL = MEDIA_URL + 'tinymce/tiny_mce.js'
+TINYMCE_JS_ROOT = os.path.join(MEDIA_ROOT, 'tinymce')

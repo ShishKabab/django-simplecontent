@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>{% block title %}SimpleContent - {% block subTitle %}{% endblock subTitle %}{% endblock title %}</title>
+	<script src="/assets/jquery.js" type="text/javascript" charset="utf-8"></script>
+	{% block extra_head %}{% endblock %}
+</head>
+<body>
+	{% block simplecontent %}{{ content }}{% endblock %}
+</body>
+</html>

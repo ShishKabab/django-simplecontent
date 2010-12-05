@@ -1,0 +1,9 @@
+{% extends "simplecontent/base.html" %}
+{% load i18n %}
+{% block subTitle %}{% trans 'Confirm content deletion' %}{% endblock subTitle %}
+{% block simplecontent %}
+<h1>{% trans 'Confirm content deletion' %}</h1>
+{% blocktrans %}Are you sure you want to delete {{ path }}?{% endblocktrans %}<br />
+<a href="{% url django_simplecontent.views.content_delete %}?path={{ path|urlencode }}&amp;confirm=1">{% trans 'Yes' %}</a> |
+<a href="{% url django_simplecontent.views.content_list %}">{% trans 'No' %}</a>
+{% endblock %}

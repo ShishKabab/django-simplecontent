@@ -1,0 +1,8 @@
+{% extends "simplecontent/base.html" %}
+{% load i18n %}
+{% block subTitle %}{% trans 'Generate content' %}{% endblock subTitle %}
+{% block simplecontent %}
+<h1>{% trans 'Content successfuly generated' %}</h1>
+{% url django_simplecontent.views.content_list as list_url %}
+{% blocktrans %}Click <a href="{{ list_url }}">here</a> to return to content list.{% endblocktrans %}
+{% endblock %}

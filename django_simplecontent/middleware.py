@@ -8,12 +8,17 @@ from django_simplecontent.template import DjangoTemplate
 class ContentMiddleware(object):
 	templateManager = getTemplateManager()
 	pageProcessors = getPageProcessors(includeStatic = False)
+	rootUrl = settings.SIMPLECONTENT_ROOT_URL or "/"
 
 	def process_response(self, request, response):
 		if response.status_code == 404:
+			if not request.path.startswith(self.rootUrl):
+				return response
+
+			path = request.path[len(self.rootUrl):]
 			fileInfo = {
-				'srcPath': os.path.join(settings.SIMPLECONTENT_ROOT, request.path[1:]),
-				'relPath': request.path[1:],
+				'srcPath': os.path.join(settings.SIMPLECONTENT_ROOT, path),
+				'relPath': path,
 				'outPath': None
 			}
 			if os.access(fileInfo["srcPath"], os.F_OK):

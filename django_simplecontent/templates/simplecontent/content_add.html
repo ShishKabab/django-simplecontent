@@ -1,12 +1,13 @@
 {% extends "simplecontent/base.html" %}
-{% block subTitle %}Add content{% endblock subTitle %}
+{% load i18n %}
+{% block subTitle %}{% trans 'Add content' %}{% endblock subTitle %}
 {% block simplecontent %}
-<h1>Add content</h1>
+<h1>{% trans 'Add content' %}</h1>
 <form action="{% url django_simplecontent.views.content_edit %}" method="get">
 	<input type="hidden" name="new" value="1" />
 
-	Path: <input type="text" name="path" /><br />
-	Template:
+	{% trans 'Path:' %} <input type="text" name="path" /><br />
+	{% trans 'Template:' %}
 	<select name="parent">
 		{% for template in templates %}
 		<option value="{{ template.path }}">{{ template.path }}</option>

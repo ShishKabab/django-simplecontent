@@ -2,11 +2,11 @@ import os
 from django.contrib.auth.decorators import permission_required, login_required
 from django.template import RequestContext
 from django.shortcuts import render_to_response
-from django.http import Http404
+from django.http import Http404, HttpResponseRedirect
 from django.conf import settings
 from django.forms.formsets import formset_factory
-from tinymce.widgets import TinyMCE
-from django_simplecontent.common import getTemplateManager, getPageProcessors
+from django.core.urlresolvers import reverse
+from django_simplecontent.common import getTemplateManager, buildHtml
 from django_simplecontent.models import Template, BlockConnection
 from django_simplecontent import forms
 
@@ -90,7 +90,7 @@ def content_edit(request):
 
 			content += "{%% block %s %%}%s{%% endblock %%}\n" % field
 
-		print content
+		open(absPath, 'w').write(content.encode('utf8'))
 		saved = True
 
 	return render_to_response('simplecontent/content_edit.html', {
@@ -99,11 +99,39 @@ def content_edit(request):
 		'path': path,
 		'parent': parent,
 		'saved': saved,
-		'new': int(new)
+		'new': int(new),
+		'root_url': settings.SIMPLECONTENT_ROOT_URL or "/"
 	}, context_instance = RequestContext(request))
 
 @login_required
 def content_add(request):
 	return render_to_response('simplecontent/content_add.html', {
 		'templates': Template.objects.all()
+	}, context_instance = RequestContext(request))
+
+@login_required
+def content_delete(request):
+	confirm = bool(request.GET.get("confirm"))
+	path = request.GET.get("path")
+	absPath = os.path.abspath(os.path.join(settings.SIMPLECONTENT_ROOT, path))
+	outPath = os.path.abspath(os.path.join(settings.SIMPLECONTENT_OUTPUT_ROOT, path))
+	if not absPath.startswith(settings.SIMPLECONTENT_ROOT):
+		return Http404
+
+	if not confirm:
+		return render_to_response('simplecontent/content_delete.html', {
+			'path': path
+		}, context_instance = RequestContext(request))
+
+	for i in (absPath, outPath):
+		try:	os.remove(i)
+		except:	pass
+	return HttpResponseRedirect(reverse('django_simplecontent.views.content_list'))
+
+@login_required
+def content_generate(request):
+	buildHtml(allowAbort = not bool(request.GET.get("force")))
+
+	return render_to_response('simplecontent/content_generate.html', {
+		'success': True
 	}, context_instance = RequestContext(request))

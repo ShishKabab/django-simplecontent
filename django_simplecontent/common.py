@@ -1,3 +1,4 @@
+import os
 from os.path import join as joinPath
 from django.conf import settings
 from django_simplecontent import processor
@@ -69,3 +70,37 @@ def renderTemplate(fileInfo, templateManager, allowAbort = False, pageProcessors
 
 	if render or not allowAbort:
 		return template.render(variables)
+
+def buildHtml(contentRoot = None, outputRoot = None, directory = "", allowAbort = True, templateManager = None, pageProcessors = None):
+	if not contentRoot:
+		contentRoot = settings.SIMPLECONTENT_ROOT
+	if not outputRoot:
+		outputRoot = settings.SIMPLECONTENT_OUTPUT_ROOT
+	if not directory and not contentRoot.endswith("/"):
+		contentRoot += "/"
+	if not templateManager:
+		templateManager = getTemplateManager()
+	if not pageProcessors:
+		pageProcessors = getPageProcessors(includeStatic = True)
+
+	try:
+		os.makedirs(os.path.join(outputRoot, directory))
+	except: pass
+
+	for entry in os.listdir(joinPath(contentRoot, directory)):
+		fileInfo = {
+			'relPath': joinPath(directory, entry),
+			'srcPath': joinPath(contentRoot, entry),
+			'outPath': joinPath(outputRoot, entry)
+		}
+		if os.path.isdir(fileInfo["srcPath"]):
+			buildHtml(contentRoot, outputRoot, fileInfo["relPath"], allowAbort, templateManager, pageProcessors)
+			continue
+
+		content = renderTemplate(fileInfo, templateManager, allowAbort = allowAbort, pageProcessors = pageProcessors)
+		if content:
+			open(fileInfo["outPath"], 'w').write(content.encode('utf8'))
+
+	if not directory:
+		for pageProcessor in pageProcessors:
+			pageProcessor.processEnd()

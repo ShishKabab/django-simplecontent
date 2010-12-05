@@ -1,5 +1,6 @@
 {% extends "simplecontent/base.html" %}
-{% block subTitle %}Edit content: {{ name }}{% endblock subTitle %}
+{% load i18n %}
+{% block subTitle %}{% blocktrans %}Edit content: {{ name }}{% endblocktrans %}{% endblock subTitle %}
 {% block extra_head %}
 <script src="/assets/jquery.js" type="text/javascript" charset="utf-8"></script>
 <script src="/assets/tinymce/tiny_mce.js" type="text/javascript" charset="utf-8"></script>
@@ -27,8 +28,8 @@ jQuery(document).ready(function(){
 </script>
 {% endblock %}
 {% block simplecontent %}
-<a href="{% url django_simplecontent.views.content_list %}">Back to content list</a><br /><br />
-<h1>Edit content: {{ path }}</h1>
+<a href="{% url django_simplecontent.views.content_list %}">{% trans 'Back to content list' %}</a><br /><br />
+<h1>{% blocktrans %}Edit content: {{ path }}{% endblocktrans %}</h1>
 
 <form action="{% url django_simplecontent.views.content_edit %}?path={{ path|urlencode }}" method="post">
 	{% csrf_token %}
@@ -36,13 +37,11 @@ jQuery(document).ready(function(){
 	<input type="hidden" name="new" value="{{ new }}" />
 
 	{% if form.errors %}
-	<strong>This form contains errors, please correct them</strong><br />
+	<strong>{% trans 'This form contains errors, please correct them' %}</strong><br />
 	{% endif %}
 	{% if saved %}
-	<div id="saved" style="color: #008800">Save sucessful!</div>
+	<div id="saved" style="color: #008800">{% trans 'Save sucessful!' %}</div>
 	{% endif %}
-
-
 
 	<table style="width: 100%">
 		<col width="200px" />
@@ -60,6 +59,7 @@ jQuery(document).ready(function(){
 		{% endfor %}
 	</table>
 
-	<input type="submit" value="Save content" />
+	<input type="submit" value="{% trans 'Save content '%}" /> |
+	<a href="{{ root_url }}{{ path }}">{% trans 'preview' %}</a>
 </form>
 {% endblock %}

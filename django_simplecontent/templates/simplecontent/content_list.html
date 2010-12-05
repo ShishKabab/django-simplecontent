@@ -1,10 +1,14 @@
 {% extends "simplecontent/base.html" %}
-{% block subTitle %}Content list{% endblock subTitle %}
+{% load i18n %}
+{% block subTitle %}{% trans 'Content list' %}{% endblock subTitle %}
 {% block simplecontent %}
-<h1>Content list</h1>
+<h1>{% trans 'Content list' %}</h1>
 <ul>
 	{% for file in files %}
-	<li><a href="{% url django_simplecontent.views.content_edit %}?path={{ file.path|urlencode }}">{{ file.name }}</a></li>
+	<li><a href="{% url django_simplecontent.views.content_edit %}?path={{ file.path|urlencode }}">{{ file.name }}</a>
+		(<a href="{% url django_simplecontent.views.content_delete %}?path={{ file.path|urlencode }}">{% trans 'delete' %}</a>)</li>
 	{% endfor %}
 </ul>
+<button onclick="window.location.href = '{% url django_simplecontent.views.content_generate %}';">{% trans 'Generate content' %}</button>
+<button onclick="window.location.href = '{% url django_simplecontent.views.content_generate %}?force=1';">{% trans 'Generate all content (forced)' %}</button>
 {% endblock %}

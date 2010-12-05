@@ -1,0 +1,180 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2010-12-05 16:52+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: models.py:6 models.py:34
+msgid "block"
+msgstr "blok"
+
+#: models.py:7 models.py:24
+msgid "blocks"
+msgstr "blokken"
+
+#: models.py:9 models.py:23
+msgid "name"
+msgstr "Naam"
+
+#: models.py:10
+msgid "verbose name"
+msgstr "uitgebreide naam"
+
+#: models.py:11
+msgid "html"
+msgstr "html"
+
+#: models.py:12
+msgid "width"
+msgstr "breedte"
+
+#: models.py:13
+msgid "height"
+msgstr "hoogte"
+
+#: models.py:20 models.py:35
+msgid "template"
+msgstr "sjabloon"
+
+#: models.py:21
+msgid "templates"
+msgstr "sjablonen"
+
+#: models.py:31
+msgid "block connection"
+msgstr ""
+
+#: models.py:32
+msgid "block connections"
+msgstr "blok verbindingen"
+
+#: models.py:36
+msgid "required"
+msgstr "verplicht"
+
+#: models.py:39
+msgid "Connection from template '{template}' to {block}"
+msgstr "Verbinding tussen sjabloon '{template}' en blok {block}"
+
+#: templates/simplecontent/content_add.html:3
+#: templates/simplecontent/content_add.html:5
+msgid "Add content"
+msgstr "Content toevoegen"
+
+#: templates/simplecontent/content_add.html:9
+msgid "Path:"
+msgstr "Pad:"
+
+#: templates/simplecontent/content_add.html:10
+#
+msgid "Template:"
+msgstr "Sjabloon:"
+
+#: templates/simplecontent/content_delete.html:3
+#: templates/simplecontent/content_delete.html:5
+msgid "Confirm content deletion"
+msgstr "Bevesting verwijdering van content"
+
+#: templates/simplecontent/content_delete.html:6
+#, python-format
+msgid "Are you sure you want to delete %(path)s?"
+msgstr "Weet u zeker dat u %(path)s wilt verwijderen?"
+
+#: templates/simplecontent/content_delete.html:7
+msgid "Yes"
+msgstr "Ja"
+
+#: templates/simplecontent/content_delete.html:8
+msgid "No"
+msgstr "Nee"
+
+#: templates/simplecontent/content_edit.html:3
+#, python-format
+msgid "Edit content: %(name)s"
+msgstr "Content wijzigen: %(name)s"
+
+#: templates/simplecontent/content_edit.html:31
+msgid "Back to content list"
+msgstr "Terug naar content lijst"
+
+#: templates/simplecontent/content_edit.html:32
+#, python-format
+msgid "Edit content: %(path)s"
+msgstr "Content wijzigen: %(path)s"
+
+#: templates/simplecontent/content_edit.html:40
+msgid "This form contains errors, please correct them"
+msgstr "Dit formulier bevat fouten, corrigeer deze alstublieft"
+
+#: templates/simplecontent/content_edit.html:43
+#: templates/simplecontent/template_edit.html:18
+msgid "Save sucessful!"
+msgstr "Opslaan gelukt!"
+
+#: templates/simplecontent/content_edit.html:62
+#
+msgid "Save content "
+msgstr "Genereer content "
+
+#: templates/simplecontent/content_edit.html:63
+msgid "preview"
+msgstr "preview"
+
+#: templates/simplecontent/content_generate.html:3
+#: templates/simplecontent/content_list.html:12
+msgid "Generate content"
+msgstr "Genereer content"
+
+#: templates/simplecontent/content_generate.html:5
+msgid "Content successfuly generated"
+msgstr "Content met success gegenereerd"
+
+#: templates/simplecontent/content_generate.html:7
+#, python-format
+msgid "Click <a href=\"%(list_url)s\">here</a> to return to content list."
+msgstr ""
+"Klik <a href=\"%(list_url)s\">hier</a> om terug te gaan naar de content "
+"lijst."
+
+#: templates/simplecontent/content_list.html:3
+#: templates/simplecontent/content_list.html:5
+msgid "Content list"
+msgstr "Content lijst"
+
+#: templates/simplecontent/content_list.html:9
+msgid "delete"
+msgstr "verwijderen"
+
+#: templates/simplecontent/content_list.html:13
+msgid "Generate all content (forced)"
+msgstr "Genereer alle content (geforceerd)"
+
+#: templates/simplecontent/template_edit.html:3
+#, python-format
+msgid "Edit template: %(name)s"
+msgstr "Template wijzigen: %(name)s"
+
+#: templates/simplecontent/template_edit.html:23
+#
+msgid "Save template"
+msgstr "Sjabloon opslaan"
+
+#: templates/simplecontent/template_list.html:3
+#: templates/simplecontent/template_list.html:5
+#
+msgid "Template list"
+msgstr "Sjablonen lijst"

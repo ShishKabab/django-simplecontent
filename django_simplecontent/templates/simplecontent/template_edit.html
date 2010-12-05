@@ -1,5 +1,6 @@
 {% extends "simplecontent/base.html" %}
-{% block subTitle %}Edit template: {{ name }}{% endblock subTitle %}
+{% load i18n %}
+{% block subTitle %}{% blocktrans %}Edit template: {{ name }}{% endblocktrans %}{% endblock subTitle %}
 {% block extra_head %}
 {% if saved %}
 <script>
@@ -14,11 +15,11 @@ jQuery(document).ready(function(){
 {% block simplecontent %}
 <form action="{% url django_simplecontent.views.template_edit path name %}" method="post">
 	{% if saved %}
-	<div id="saved" style="color: #008800">Save sucessful!</div>
+	<div id="saved" style="color: #008800">{% trans 'Save sucessful!' %}</div>
 	{% endif %}
 
 	{% csrf_token %}
 	{{ form.as_p }}
-	<input type="submit" value="Save template" />
+	<input type="submit" value="{% trans 'Save template' %}" />
 </form>
 {% endblock %}

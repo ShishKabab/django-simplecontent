@@ -2,6 +2,16 @@
 {% load i18n %}
 {% block subTitle %}{% trans 'Content list' %}{% endblock subTitle %}
 {% block simplecontent %}
+<h1>{% trans 'Backups' %}</h1>
+<p>
+{% blocktrans %}
+Before you are going to edit content, we advise that you create a backup of the current content. In case you mess up, it will always be possible to revert to the current or perhaps an older version.
+{% endblocktrans %}
+<br /><br />
+<button onclick="window.location.href = '{% url django_simplecontent.views.backup_create %}';">{% trans 'Create backup' %}</button>
+<button onclick="window.location.href = '{% url django_simplecontent.views.backup_restore %}';">{% trans 'Restore backup' %}</button>
+</p>
+
 <h1>{% trans 'Content list' %}</h1>
 <ul>
 	{% for file in files %}
@@ -9,6 +19,7 @@
 		(<a href="{% url django_simplecontent.views.content_delete %}?path={{ file.path|urlencode }}">{% trans 'delete' %}</a>)</li>
 	{% endfor %}
 </ul>
-<button onclick="window.location.href = '{% url django_simplecontent.views.content_generate %}';">{% trans 'Generate content' %}</button>
-<button onclick="window.location.href = '{% url django_simplecontent.views.content_generate %}?force=1';">{% trans 'Generate all content (forced)' %}</button>
+<button onclick="window.location.href = '{% url django_simplecontent.views.content_add %}';">{% trans 'Add' %}</button>
+<button onclick="window.location.href = '{% url django_simplecontent.views.content_generate %}';">{% trans 'Generate' %}</button>
+<button onclick="window.location.href = '{% url django_simplecontent.views.content_generate %}?force=1';">{% trans 'Generate (forced)' %}</button>
 {% endblock %}

@@ -1,5 +1,6 @@
 from django.utils.translation import ugettext_lazy as _, ugettext
 from django.db import models
+from django_simplecontent.global_permissions import register_custom_permissions_simple
 
 class Block(models.Model):
 	class Meta:
@@ -37,3 +38,12 @@ class BlockConnection(models.Model):
 
 	def __unicode__(self):
 		return ugettext("Connection from template '{template}' to {block}").format(template = self.template.path, block = self.block.name)
+
+#register_custom_permissions_simple((
+	#("can_add_content", _("Can add content")),
+	#("can_edit_content", _("Can edit content")),
+	#("can_delete_content", _("Can delete content")),
+	#("can_generate_content", _("Can create backup")),
+	#("can_create_backup", _("Can create backup")),
+	#("can_restore_backup", _("Can restore backup")),
+#))

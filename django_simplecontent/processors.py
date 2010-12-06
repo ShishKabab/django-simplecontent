@@ -36,9 +36,11 @@ class CustomVariablesProcessor(PageProcessor):
 		return variables
 
 class GoogleSitemapProcessor(PageProcessor):
-	def __init__(self, outFile):
+	def __init__(self, outFile, excludeFile = None):
 		self.outDir = None
 		self.outFile = outFile
+		self.excludes = [i for i in open(excludeFile, "r").read().split("\n") if i] \
+			if excludeFile else []
 		self.sitemap = ElementTree.TreeBuilder()
 		self.sitemap.start("urlset", {"xmlns": "http://www.google.com/schemas/sitemap/0.84"})
 
@@ -46,14 +48,15 @@ class GoogleSitemapProcessor(PageProcessor):
 		if not self.outDir:
 			self.outDir = fileInfo["outPath"][: -len(fileInfo["relPath"])]
 
-		self.sitemap.start("url", {})
-		self.sitemap.start("loc", {})
-		self.sitemap.data("/" + fileInfo["relPath"])
-		self.sitemap.end("loc")
-		self.sitemap.start("lastmod", {})
-		self.sitemap.data(fileInfo["srcModified"].strftime("%Y-%m-%d"))
-		self.sitemap.end("lastmod")
-		self.sitemap.end("url")
+		if fileInfo["relPath"] not in self.excludes:
+			self.sitemap.start("url", {})
+			self.sitemap.start("loc", {})
+			self.sitemap.data("/" + fileInfo["relPath"])
+			self.sitemap.end("loc")
+			self.sitemap.start("lastmod", {})
+			self.sitemap.data(fileInfo["srcModified"].strftime("%Y-%m-%d"))
+			self.sitemap.end("lastmod")
+			self.sitemap.end("url")
 
 	def processEnd(self):
 		self.sitemap.end("urlset")
@@ -62,13 +65,15 @@ class GoogleSitemapProcessor(PageProcessor):
 		xml.write(os.path.join(self.outDir, self.outFile), encoding = "utf8")
 
 class HtmlSitemapProcessor(PageProcessor):
-	def __init__(self, template, outFile, titleBlock = "title"):
+	def __init__(self, template, outFile, titleBlock = "title", excludeFile = None):
 		self.template = template
 		self.templateManager = None
 		self.outDir = None
 		self.outFile = outFile
 		self.titleBlock = titleBlock
 		self.files = []
+		self.excludes = [i for i in open(excludeFile, "r").read().split("\n") if i] \
+			if excludeFile else []
 
 	def processFile(self, fileInfo):
 		if not self.outDir:
@@ -76,10 +81,11 @@ class HtmlSitemapProcessor(PageProcessor):
 
 	def processTemplate(self, fileInfo, variables, template):
 		self.templateManager = template.manager
-		self.files.append({
-			'path': fileInfo["relPath"],
-			'title': template.getBlockContent(self.titleBlock, variables)
-		})
+		if fileInfo["relPath"] not in self.excludes:
+			self.files.append({
+				'path': fileInfo["relPath"],
+				'title': template.getBlockContent(self.titleBlock, variables)
+			})
 
 	def processEnd(self):
 		content = self.templateManager.getFromEnv(self.template)

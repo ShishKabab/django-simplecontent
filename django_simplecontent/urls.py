@@ -8,4 +8,6 @@ urlpatterns = patterns('django_simplecontent.views',
 	(r'^content/add/$', 'content_add'),
 	(r'^content/delete/$', 'content_delete'),
 	(r'^content/generate/$', 'content_generate'),
+	(r'^backup/create/$', 'backup_create'),
+	(r'^backup/restore/$', 'backup_restore'),
 )

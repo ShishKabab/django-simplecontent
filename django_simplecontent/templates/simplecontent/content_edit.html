@@ -28,7 +28,7 @@ jQuery(document).ready(function(){
 </script>
 {% endblock %}
 {% block simplecontent %}
-<a href="{% url django_simplecontent.views.content_list %}">{% trans 'Back to content list' %}</a><br /><br />
+<a href="{% url django_simplecontent.views.content_list %}">{% trans 'Back to page list' %}</a><br /><br />
 <h1>{% blocktrans %}Edit content: {{ path }}{% endblocktrans %}</h1>
 
 <form action="{% url django_simplecontent.views.content_edit %}?path={{ path|urlencode }}" method="post">
@@ -59,7 +59,7 @@ jQuery(document).ready(function(){
 		{% endfor %}
 	</table>
 
-	<input type="submit" value="{% trans 'Save content '%}" /> |
-	<a href="{{ root_url }}{{ path }}">{% trans 'preview' %}</a>
+	<input type="submit" value="{% trans 'Save' %}" /> |
+	<a href="{{ root_url }}{{ path }}" target="preview">{% trans 'preview' %}</a>
 </form>
 {% endblock %}

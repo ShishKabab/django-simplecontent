@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-12-05 16:52+0100\n"
+"POT-Creation-Date: 2010-12-06 17:24+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,71 +18,102 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: models.py:6 models.py:34
+#: models.py:7 models.py:35
 msgid "block"
 msgstr "blok"
 
-#: models.py:7 models.py:24
+#: models.py:8 models.py:25
 msgid "blocks"
 msgstr "blokken"
 
-#: models.py:9 models.py:23
+#: models.py:10 models.py:24
 msgid "name"
 msgstr "Naam"
 
-#: models.py:10
+#: models.py:11
 msgid "verbose name"
 msgstr "uitgebreide naam"
 
-#: models.py:11
+#: models.py:12
 msgid "html"
 msgstr "html"
 
-#: models.py:12
+#: models.py:13
 msgid "width"
 msgstr "breedte"
 
-#: models.py:13
+#: models.py:14
 msgid "height"
 msgstr "hoogte"
 
-#: models.py:20 models.py:35
+#: models.py:21 models.py:36
 msgid "template"
 msgstr "sjabloon"
 
-#: models.py:21
+#: models.py:22
 msgid "templates"
 msgstr "sjablonen"
 
-#: models.py:31
-msgid "block connection"
-msgstr ""
-
 #: models.py:32
+msgid "block connection"
+msgstr "blok verbinding"
+
+#: models.py:33
 msgid "block connections"
 msgstr "blok verbindingen"
 
-#: models.py:36
+#: models.py:37
 msgid "required"
 msgstr "verplicht"
 
-#: models.py:39
+#: models.py:40
 msgid "Connection from template '{template}' to {block}"
 msgstr "Verbinding tussen sjabloon '{template}' en blok {block}"
 
+#: templates/simplecontent/backup_create.html:3
+#: templates/simplecontent/content_list.html:11
+msgid "Create backup"
+msgstr "Backup maken"
+
+#: templates/simplecontent/backup_create.html:5
+msgid "Backup successfuly created"
+msgstr "Backup succesvol aangemaakt"
+
+#: templates/simplecontent/backup_create.html:7
+#: templates/simplecontent/content_generate.html:7
+#, python-format
+msgid "Click <a href=\"%(list_url)s\">here</a> to return to content list."
+msgstr ""
+"Klik <a href=\"%(list_url)s\">hier</a> om terug te gaan naar de content "
+"lijst."
+
+#: templates/simplecontent/backup_restore.html:3
+#: templates/simplecontent/backup_restore.html:5
+#: templates/simplecontent/content_list.html:12
+msgid "Restore backup"
+msgstr "Backup terugzetten"
+
+#: templates/simplecontent/backup_restore.html:7
+msgid "Choose backup to restore"
+msgstr "Kies backup om terug te zetten"
+
 #: templates/simplecontent/content_add.html:3
 #: templates/simplecontent/content_add.html:5
-msgid "Add content"
-msgstr "Content toevoegen"
+msgid "Add page"
+msgstr "Pagina toevoegen"
 
 #: templates/simplecontent/content_add.html:9
 msgid "Path:"
 msgstr "Pad:"
 
-#: templates/simplecontent/content_add.html:10
 #
+#: templates/simplecontent/content_add.html:10
 msgid "Template:"
 msgstr "Sjabloon:"
+
+#: templates/simplecontent/content_add.html:17
+msgid "Create"
+msgstr "Aanmaken"
 
 #: templates/simplecontent/content_delete.html:3
 #: templates/simplecontent/content_delete.html:5
@@ -108,8 +139,8 @@ msgid "Edit content: %(name)s"
 msgstr "Content wijzigen: %(name)s"
 
 #: templates/simplecontent/content_edit.html:31
-msgid "Back to content list"
-msgstr "Terug naar content lijst"
+msgid "Back to page list"
+msgstr "Terug naar pagina lijst"
 
 #: templates/simplecontent/content_edit.html:32
 #, python-format
@@ -126,16 +157,14 @@ msgid "Save sucessful!"
 msgstr "Opslaan gelukt!"
 
 #: templates/simplecontent/content_edit.html:62
-#
-msgid "Save content "
-msgstr "Genereer content "
+msgid "Save"
+msgstr "Opslaan"
 
 #: templates/simplecontent/content_edit.html:63
 msgid "preview"
 msgstr "preview"
 
 #: templates/simplecontent/content_generate.html:3
-#: templates/simplecontent/content_list.html:12
 msgid "Generate content"
 msgstr "Genereer content"
 
@@ -143,38 +172,62 @@ msgstr "Genereer content"
 msgid "Content successfuly generated"
 msgstr "Content met success gegenereerd"
 
-#: templates/simplecontent/content_generate.html:7
-#, python-format
-msgid "Click <a href=\"%(list_url)s\">here</a> to return to content list."
-msgstr ""
-"Klik <a href=\"%(list_url)s\">hier</a> om terug te gaan naar de content "
-"lijst."
-
 #: templates/simplecontent/content_list.html:3
-#: templates/simplecontent/content_list.html:5
+#: templates/simplecontent/content_list.html:15
 msgid "Content list"
 msgstr "Content lijst"
 
-#: templates/simplecontent/content_list.html:9
+#: templates/simplecontent/content_list.html:5
+msgid "Backups"
+msgstr "Backups"
+
+#: templates/simplecontent/content_list.html:7
+msgid ""
+"\n"
+"Before you are going to edit content, we advise that you create a backup of "
+"the current content. In case you mess up, it will always be possible to "
+"revert to the current or perhaps an older version.\n"
+msgstr ""
+"\n"
+"Wij adviseren u eerst een backup te maken voordat u content gaat bewerken."
+"Als er iets fout gaat, kunt u dan altijd weer terug naar de huidige of "
+"misschien zelfs een oudere versie.\n"
+
+#: templates/simplecontent/content_list.html:19
 msgid "delete"
 msgstr "verwijderen"
 
-#: templates/simplecontent/content_list.html:13
-msgid "Generate all content (forced)"
-msgstr "Genereer alle content (geforceerd)"
+#: templates/simplecontent/content_list.html:22
+msgid "Add"
+msgstr "Toevoegen"
+
+#: templates/simplecontent/content_list.html:23
+msgid "Generate"
+msgstr "Genereer"
+
+#: templates/simplecontent/content_list.html:24
+msgid "Generate (forced)"
+msgstr "Genereer (geforceerd)"
 
 #: templates/simplecontent/template_edit.html:3
 #, python-format
 msgid "Edit template: %(name)s"
 msgstr "Template wijzigen: %(name)s"
 
-#: templates/simplecontent/template_edit.html:23
 #
+#: templates/simplecontent/template_edit.html:23
 msgid "Save template"
 msgstr "Sjabloon opslaan"
 
+#
 #: templates/simplecontent/template_list.html:3
 #: templates/simplecontent/template_list.html:5
-#
 msgid "Template list"
 msgstr "Sjablonen lijst"
+
+#~ msgid "Add content"
+#~ msgstr "Content toevoegen"
+
+#
+#~ msgid "Save content "
+#~ msgstr "Genereer content "

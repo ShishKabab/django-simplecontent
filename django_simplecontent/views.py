@@ -1,4 +1,6 @@
 import os
+import tarfile
+import time
 from django.contrib.auth.decorators import permission_required, login_required
 from django.template import RequestContext
 from django.shortcuts import render_to_response
@@ -112,17 +114,17 @@ def content_add(request):
 @login_required
 def content_delete(request):
 	confirm = bool(request.GET.get("confirm"))
-	path = request.GET.get("path")
-	absPath = os.path.abspath(os.path.join(settings.SIMPLECONTENT_ROOT, path))
-	outPath = os.path.abspath(os.path.join(settings.SIMPLECONTENT_OUTPUT_ROOT, path))
+	relPath = request.GET.get("path")
+	absPath = os.path.abspath(os.path.join(settings.SIMPLECONTENT_ROOT, relPath))
 	if not absPath.startswith(settings.SIMPLECONTENT_ROOT):
-		return Http404
+		raise Http404
 
 	if not confirm:
 		return render_to_response('simplecontent/content_delete.html', {
-			'path': path
+			'path': relPath
 		}, context_instance = RequestContext(request))
 
+	outPath = os.path.abspath(os.path.join(settings.SIMPLECONTENT_OUTPUT_ROOT, relPath))
 	for i in (absPath, outPath):
 		try:	os.remove(i)
 		except:	pass
@@ -135,3 +137,39 @@ def content_generate(request):
 	return render_to_response('simplecontent/content_generate.html', {
 		'success': True
 	}, context_instance = RequestContext(request))
+
+@login_required
+def backup_create(request):
+	try:	os.makedirs(settings.SIMPLECONTENT_BACKUP_DIR)
+	except:	pass
+
+	file = os.path.join(settings.SIMPLECONTENT_BACKUP_DIR, time.strftime("%d-%m-%Y-%H:%M.tgz"))
+	file = tarfile.open(file, "w:gz")
+	try:
+		file.add(settings.SIMPLECONTENT_ROOT, os.path.basename(settings.SIMPLECONTENT_ROOT))
+	finally:
+		file.close()
+
+	return render_to_response('simplecontent/backup_create.html', {
+		'success': True
+	}, context_instance = RequestContext(request))
+
+@login_required
+def backup_restore(request):
+	file = request.GET.get("path")
+	if not file:
+		return render_to_response('simplecontent/backup_restore.html', {
+			'files': os.listdir(settings.SIMPLECONTENT_BACKUP_DIR)
+		}, context_instance = RequestContext(request))
+
+	absPath = os.path.abspath(os.path.join(settings.SIMPLECONTENT_BACKUP_DIR, file))
+	if not absPath.startswith(settings.SIMPLECONTENT_BACKUP_DIR):
+		raise Http404
+
+	file = tarfile.open(absPath)
+	try:
+		file.extractall(os.path.dirname(os.path.normpath(settings.SIMPLECONTENT_ROOT)))
+	finally:
+		file.close()
+
+	return HttpResponseRedirect(reverse('django_simplecontent.views.content_list'))

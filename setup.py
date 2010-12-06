@@ -3,7 +3,7 @@ from distutils.core import setup
 
 setup(
 	name = "django-simplecontent",
-	version = "0.1a.1",
+	version = "0.1a2",
 	author = "Vincent den Boer",
 	author_email = "vincent@shishkabab.net",
 	description = "A simple way to test static content and templates and writing them to disk when you're finished",

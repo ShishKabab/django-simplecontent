@@ -49,16 +49,18 @@ def makeProcessor(entry):
 		path = entry.path
 		args = entry.args
 		kwds = entry.kwds
-	else:
+	elif isinstance(entry, basestring):
 		path = entry
 		args = ()
+	else:
+		raise ImportError("Invalid processor entry: %s" % entry)
 
 	return importClass(path)(*args, **kwds)
 
 def renderTemplate(fileInfo, templateManager, allowAbort = False, pageProcessors = []):
 	render = True
 	for proccessor in pageProcessors:
-		render &= proccessor.processFile(fileInfo) == True
+		render &= proccessor.processFile(fileInfo) != False
 
 	variables = {"fileInfo": fileInfo}
 	for proccessor in pageProcessors:

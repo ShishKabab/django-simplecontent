@@ -1,0 +1,13 @@
+{% extends "simplecontent/base.html" %}
+{% load i18n %}
+{% block subTitle %}{% trans 'Restore backup' %}{% endblock subTitle %}
+{% block simplecontent %}
+<h1>{% trans 'Restore backup' %}</h1>
+
+{% trans 'Choose backup to restore' %}
+<ul>
+	{% for file in files %}
+	<li><a href="{% url django_simplecontent.views.backup_restore %}?path={{ file|urlencode }}">{{ file }}</a></li>
+	{% endfor %}
+</ul>
+{% endblock %}

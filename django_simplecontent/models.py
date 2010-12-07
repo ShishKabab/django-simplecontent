@@ -1,6 +1,6 @@
 from django.utils.translation import ugettext_lazy as _, ugettext
 from django.db import models
-from django_simplecontent.global_permissions import register_custom_permissions_simple
+#from django_simplecontent.global_permissions import register_custom_permissions_simple
 
 class Block(models.Model):
 	class Meta:

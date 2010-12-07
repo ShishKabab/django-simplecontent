@@ -86,7 +86,7 @@ def content_edit(request):
 	saved = False
 	if request.method == "POST" and form.is_valid():
 		content = '{%% extends "%s" %%}\n' % request.POST["parent"]
-		for field in form.fields.items():
+		for field in form.cleaned_data.items():
 			if not field[1]:
 				continue
 

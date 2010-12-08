@@ -39,6 +39,8 @@ class GoogleSitemapProcessor(PageProcessor):
 	def __init__(self, outFile, excludeFile = None):
 		self.outDir = None
 		self.outFile = outFile
+		self.umask = None
+		self.group = None
 		self.excludes = [i for i in open(excludeFile, "r").read().split("\n") if i] \
 			if excludeFile else []
 		self.sitemap = ElementTree.TreeBuilder()
@@ -47,6 +49,10 @@ class GoogleSitemapProcessor(PageProcessor):
 	def processFile(self, fileInfo):
 		if not self.outDir:
 			self.outDir = fileInfo["outPath"][: -len(fileInfo["relPath"])]
+		if not self.umask:
+			self.umask = fileInfo.get("outUmask")
+		if not self.group:
+			self.group = fileInfo.get("outGroup")
 
 		if fileInfo["relPath"] not in self.excludes:
 			self.sitemap.start("url", {})
@@ -61,8 +67,14 @@ class GoogleSitemapProcessor(PageProcessor):
 	def processEnd(self):
 		self.sitemap.end("urlset")
 
+		outPath = os.path.join(self.outDir, self.outFile)
 		xml = ElementTree.ElementTree(self.sitemap.close())
-		xml.write(os.path.join(self.outDir, self.outFile), encoding = "utf8")
+		xml.write(outPath, encoding = "utf8")
+
+		if self.umask:
+			os.chmod(outPath, self.umask)
+		if self.group:
+			os.chown(outPath, -1, self.group)
 
 class HtmlSitemapProcessor(PageProcessor):
 	def __init__(self, template, outFile, titleBlock = "title", excludeFile = None):
@@ -70,6 +82,8 @@ class HtmlSitemapProcessor(PageProcessor):
 		self.templateManager = None
 		self.outDir = None
 		self.outFile = outFile
+		self.umask = None
+		self.group = None
 		self.titleBlock = titleBlock
 		self.files = []
 		self.excludes = [i for i in open(excludeFile, "r").read().split("\n") if i] \
@@ -78,6 +92,10 @@ class HtmlSitemapProcessor(PageProcessor):
 	def processFile(self, fileInfo):
 		if not self.outDir:
 			self.outDir = fileInfo["outPath"][: -len(fileInfo["relPath"])]
+		if not self.umask:
+			self.umask = fileInfo.get("outUmask")
+		if not self.group:
+			self.group = fileInfo.get("outGroup")
 
 	def processTemplate(self, fileInfo, variables, template):
 		self.templateManager = template.manager
@@ -94,7 +112,13 @@ class HtmlSitemapProcessor(PageProcessor):
 			'pages': sorted(self.files, key = lambda i: i["title"]),
 			'lastModified': datetime.now()
 		})
-		open(os.path.join(self.outDir, self.outFile), 'w').write(content.encode('utf8'))
+
+		outPath = os.path.join(self.outDir, self.outFile)
+		open(outPath, 'w').write(content.encode('utf8'))
+		if self.umask:
+			os.chmod(outPath, self.umask)
+		if self.group:
+			os.chown(outPath, -1, self.group)
 
 class OnlyModifiedProcessor(PageProcessor):
 	def processFile(self, fileInfo):

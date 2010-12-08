@@ -1,4 +1,5 @@
 import os
+import grp
 from os.path import join as joinPath
 from django.conf import settings
 from django_simplecontent import processor
@@ -73,7 +74,8 @@ def renderTemplate(fileInfo, templateManager, allowAbort = False, pageProcessors
 	if render or not allowAbort:
 		return template.render(variables)
 
-def buildHtml(contentRoot = None, outputRoot = None, directory = "", allowAbort = True, templateManager = None, pageProcessors = None):
+def buildHtml(contentRoot = None, outputRoot = None, directory = "", allowAbort = True, templateManager = None, pageProcessors = None,
+	umask = None, group = None):
 	if not contentRoot:
 		contentRoot = settings.SIMPLECONTENT_ROOT
 	if not outputRoot:
@@ -84,6 +86,11 @@ def buildHtml(contentRoot = None, outputRoot = None, directory = "", allowAbort 
 		templateManager = getTemplateManager()
 	if not pageProcessors:
 		pageProcessors = getPageProcessors(includeStatic = True)
+	if not umask:
+		umask = getattr(settings, "SIMPLECONTENT_OUTPUT_UMASK", None)
+	if not group:
+		group = getattr(settings, "SIMPLECONTENT_OUTPUT_GROUP", None)
+		group = group and grp.getgrnam(group).gr_gid
 
 	try:
 		os.makedirs(os.path.join(outputRoot, directory))
@@ -93,7 +100,9 @@ def buildHtml(contentRoot = None, outputRoot = None, directory = "", allowAbort 
 		fileInfo = {
 			'relPath': joinPath(directory, entry),
 			'srcPath': joinPath(contentRoot, entry),
-			'outPath': joinPath(outputRoot, entry)
+			'outPath': joinPath(outputRoot, entry),
+			'outUmask': umask,
+			'outGroup': group
 		}
 		if os.path.isdir(fileInfo["srcPath"]):
 			buildHtml(contentRoot, outputRoot, fileInfo["relPath"], allowAbort, templateManager, pageProcessors)
@@ -102,6 +111,10 @@ def buildHtml(contentRoot = None, outputRoot = None, directory = "", allowAbort 
 		content = renderTemplate(fileInfo, templateManager, allowAbort = allowAbort, pageProcessors = pageProcessors)
 		if content:
 			open(fileInfo["outPath"], 'w').write(content.encode('utf8'))
+		if umask:
+			os.chmod(fileInfo["outPath"], umask)
+		if group:
+			os.chown(fileInfo["outPath"], -1, group)
 
 	if not directory:
 		for pageProcessor in pageProcessors:

@@ -41,33 +41,41 @@ def getPageProcessors(includeStatic):
 
 	return pageProcessors
 
+def getDynamicPages():
+	dynamicPages = getattr(settings, 'SIMPLECONTENT_DYNAMIC_PAGES', {})
+	for key, value in dynamicPages.items():
+		dynamicPages[key] = importClass(value)
+
+	return dynamicPages
+
 def makeProcessor(entry):
 	kwds = {}
-	if isinstance(entry, tuple):
+	if isinstance(entry, basestring):
+		path = entry
+		args = ()
+	elif isinstance(entry, tuple):
 		path = entry[0]
 		args = entry[1:]
-	elif isinstance(entry, processor):
+	elif hasattr(entry, "path") and hasattr(entry, "args") and hasattr(entry, "kwds"):
 		path = entry.path
 		args = entry.args
 		kwds = entry.kwds
-	elif isinstance(entry, basestring):
-		path = entry
-		args = ()
 	else:
 		raise ImportError("Invalid processor entry: %s" % entry)
 
 	return importClass(path)(*args, **kwds)
 
-def renderTemplate(fileInfo, templateManager, allowAbort = False, pageProcessors = []):
+def renderTemplate(fileInfo, templateManager, allowAbort = False, pageProcessors = [], template = None, variables = {}):
 	render = True
 	for proccessor in pageProcessors:
 		render &= proccessor.processFile(fileInfo) != False
 
-	variables = {"fileInfo": fileInfo}
+	variables = variables.copy()
+	variables["fileInfo"] = fileInfo
 	for proccessor in pageProcessors:
 		variables = proccessor.processVariables(fileInfo, variables)
 
-	template = templateManager.getFromFile(fileInfo["srcPath"])
+	template = template or templateManager.getFromFile(fileInfo["srcPath"])
 	for proccessor in pageProcessors:
 		proccessor.processTemplate(fileInfo, variables, template)
 
@@ -117,5 +125,25 @@ def buildHtml(contentRoot = None, outputRoot = None, directory = "", allowAbort 
 			os.chown(fileInfo["outPath"], -1, group)
 
 	if not directory:
+		dynamicPages = getDynamicPages()
+		for path, view in dynamicPages.items():
+			info = view(templateManager)
+			fileInfo = {
+				'srcPath': info['srcPath'],
+				'relPath': path,
+				'outPath': joinPath(outputRoot, path)
+			}
+			template = info['template']
+			variables = info['variables']
+
+			content = renderTemplate(fileInfo, templateManager, allowAbort = allowAbort, pageProcessors = pageProcessors,
+				template = template, variables = variables)
+			if content:
+				open(fileInfo["outPath"], 'w').write(content.encode('utf8'))
+			if umask:
+				os.chmod(fileInfo["outPath"], umask)
+			if group:
+				os.chown(fileInfo["outPath"], -1, group)
+
 		for pageProcessor in pageProcessors:
 			pageProcessor.processEnd()

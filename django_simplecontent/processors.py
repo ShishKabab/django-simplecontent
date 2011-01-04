@@ -36,13 +36,14 @@ class CustomVariablesProcessor(PageProcessor):
 		return variables
 
 class GoogleSitemapProcessor(PageProcessor):
-	def __init__(self, outFile, excludeFile = None):
+	def __init__(self, outFile, excludeFile = None, url = "/"):
 		self.outDir = None
 		self.outFile = outFile
 		self.umask = None
 		self.group = None
 		self.excludes = [i for i in open(excludeFile, "r").read().split("\n") if i] \
 			if excludeFile else []
+		self.url = url
 		self.sitemap = ElementTree.TreeBuilder()
 		self.sitemap.start("urlset", {"xmlns": "http://www.google.com/schemas/sitemap/0.84"})
 
@@ -57,7 +58,7 @@ class GoogleSitemapProcessor(PageProcessor):
 		if fileInfo["relPath"] not in self.excludes:
 			self.sitemap.start("url", {})
 			self.sitemap.start("loc", {})
-			self.sitemap.data("/" + fileInfo["relPath"])
+			self.sitemap.data(self.url + "/" + fileInfo["relPath"])
 			self.sitemap.end("loc")
 			self.sitemap.start("lastmod", {})
 			self.sitemap.data(fileInfo["srcModified"].strftime("%Y-%m-%d"))

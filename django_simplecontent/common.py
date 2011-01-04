@@ -20,10 +20,12 @@ def importClass(path):
 	try:
 		mod = import_module(mod)
 	except ImportError, e:
+		raise
 		raise ImportError('Error importing module %s: "%s"' % (mod, e))
 	try:
 		cls = getattr(mod, cls)
 	except AttributeError:
+		raise
 		raise ImportError('Module "%s" does not define a "%s" class' % (mod, cls))
 
 	return cls

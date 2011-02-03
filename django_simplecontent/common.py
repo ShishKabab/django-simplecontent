@@ -118,7 +118,12 @@ def buildHtml(contentRoot = None, outputRoot = None, directory = "", allowAbort 
 			buildHtml(contentRoot, outputRoot, fileInfo["relPath"], allowAbort, templateManager, pageProcessors)
 			continue
 
-		content = renderTemplate(fileInfo, templateManager, allowAbort = allowAbort, pageProcessors = pageProcessors)
+		try:
+			content = renderTemplate(fileInfo, templateManager, allowAbort = allowAbort, pageProcessors = pageProcessors)
+		except Exception, e:
+			print "Error rendering page '%s': %s" % (fileInfo["relPath"], e)
+			continue
+
 		if content:
 			open(fileInfo["outPath"], 'w').write(content.encode('utf8'))
 		if umask:

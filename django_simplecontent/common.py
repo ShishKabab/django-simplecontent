@@ -109,8 +109,8 @@ def buildHtml(contentRoot = None, outputRoot = None, directory = "", allowAbort 
 	for entry in os.listdir(joinPath(contentRoot, directory)):
 		fileInfo = {
 			'relPath': joinPath(directory, entry),
-			'srcPath': joinPath(contentRoot, entry),
-			'outPath': joinPath(outputRoot, entry),
+			'srcPath': joinPath(contentRoot, directory, entry),
+			'outPath': joinPath(outputRoot, directory, entry),
 			'outUmask': umask,
 			'outGroup': group
 		}

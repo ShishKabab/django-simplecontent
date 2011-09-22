@@ -14,7 +14,7 @@ class Command(BaseCommand):
 			dest='force',
 			default=False,
 			help='Generates all content ignoring page processor opinions'),
-        )
+		)
 
 	def handle(self, *args, **options):
 		buildHtml(outputRoot = args[0], allowAbort = not options["force"])

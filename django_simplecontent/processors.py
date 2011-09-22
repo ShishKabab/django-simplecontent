@@ -123,4 +123,12 @@ class HtmlSitemapProcessor(PageProcessor):
 
 class OnlyModifiedProcessor(PageProcessor):
 	def processFile(self, fileInfo):
-		return fileInfo["srcModified"] > fileInfo["outModified"]
+		if fileInfo["outModified"] == None:
+			#print ("New file %s " % fileInfo["relPath"])
+			return True
+		elif fileInfo["srcModified"] > fileInfo["outModified"]:
+			#print ("File changed %s " % fileInfo["relPath"])
+			return True
+		else:
+			#print ("File unchanged %s " % fileInfo["relPath"])
+			return False

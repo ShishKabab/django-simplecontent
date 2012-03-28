@@ -17,6 +17,9 @@ class ContentMiddleware(object):
 				return response
 
 			path = request.path[len(self.rootUrl):]
+			if not path or path.endswith('/'):
+				path += 'index.html'
+			
 			template = None
 			variables = {}
 			fileInfo = {
@@ -24,7 +27,7 @@ class ContentMiddleware(object):
 				'relPath': path,
 				'outPath': None
 			}
-			if not os.access(fileInfo["srcPath"], os.F_OK):
+			if not os.path.exists(fileInfo["srcPath"]):
 				page = self.dynamicPages.get(path.strip("/"))
 				if not page:
 					return response

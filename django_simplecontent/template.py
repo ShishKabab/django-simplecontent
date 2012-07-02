@@ -1,3 +1,5 @@
+from django_simplecontent.common import importClass
+
 class Template(object):
 	def __init__(self, manager):
 		self.manager = manager
@@ -103,10 +105,15 @@ class Jinja2TemplateManager(TemplateManager):
 			from jinja2 import Environment, FileSystemLoader
 			try:
 				from django.conf import settings
-				from django.template.loaders.app_directories import app_template_dirs
-				self.env = Environment(
-					loader = FileSystemLoader(app_template_dirs + settings.TEMPLATE_DIRS)
-				)
+
+				env = getattr(settings, 'SIMPLECONTENT_JINJA2_ENV', None)
+				if not env:
+					from django.template.loaders.app_directories import app_template_dirs
+					self.env = Environment(
+						loader = FileSystemLoader(app_template_dirs + settings.TEMPLATE_DIRS)
+					)
+				else:
+					self.env = importClass(env)
 			except ImportError:
 				self.env = Environment()
 		else:

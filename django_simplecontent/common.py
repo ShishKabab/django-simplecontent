@@ -25,7 +25,6 @@ def importClass(path):
 	try:
 		cls = getattr(mod, cls)
 	except AttributeError:
-		raise
 		raise ImportError('Module "%s" does not define a "%s" class' % (mod, cls))
 
 	return cls

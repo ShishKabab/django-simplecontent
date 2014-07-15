@@ -1,4 +1,4 @@
-from django.conf.urls.defaults import *
+from django.conf.urls import patterns
 
 urlpatterns = patterns('django_simplecontent.views',
 	(r'^templates/list/$', 'template_list'),

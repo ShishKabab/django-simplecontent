@@ -108,9 +108,8 @@ class Jinja2TemplateManager(TemplateManager):
 
 				env = getattr(settings, 'SIMPLECONTENT_JINJA2_ENV', None)
 				if not env:
-					from django.template.loaders.app_directories import app_template_dirs
 					self.env = Environment(
-						loader = FileSystemLoader(app_template_dirs + settings.TEMPLATE_DIRS)
+						loader = FileSystemLoader(settings.TEMPLATE_DIRS)
 					)
 				else:
 					self.env = importClass(env)
